@@ -3,6 +3,9 @@
 > zsh plugin to cache the output of a binary initialization command, intended
 > to help lower shell startup time.
 
+> [!NOTE]
+> This is a fork of https://github.com/mroth/evalcache that automatically re-validates the cache after a specified amount of time.
+
 ## What it does
 
 There are lots of shell wrapper tools that follow the pattern of asking you to
@@ -44,6 +47,8 @@ especially if you use a bunch of these tools. Every millisecond counts!
 
 - `$ZSH_EVALCACHE_DIR`: cache files storage, default `$HOME/.zsh-evalcache`.
 - `$ZSH_EVALCACHE_DISABLE`: set to `true` if you wish to bypass evalcache.
+- `$ZSH_EVALCACHE_SECONDS`: how long until to re-evaluate the command in seconds, default `4320` (3 days)
+- `$ZSH_EVALCACHE_SHOW_MESSAGES`: set to `true` if you want to display console output
 
 There is a convenience function to clear the cache called `_evalcache_clear`.
 
@@ -51,9 +56,9 @@ There is a convenience function to clear the cache called `_evalcache_clear`.
 
 ### [Antigen](https://github.com/zsh-users/antigen)
 
-Add `antigen bundle mroth/evalcache` to your `.zshrc` with your other bundle commands.
+Add `antigen bundle TimoBechtel/evalcache` to your `.zshrc` with your other bundle commands.
 
-Antigen will handle cloning the plugin for you automatically the next time you start zsh. You can also add the plugin to a running zsh with `antigen bundle mroth/evalcache` for testing before adding it to your `.zshrc`.
+Antigen will handle cloning the plugin for you automatically the next time you start zsh. You can also add the plugin to a running zsh with `antigen bundle TimoBechtel/evalcache` for testing before adding it to your `.zshrc`.
 
 ### [Fig](https://fig.io)
 
@@ -68,7 +73,7 @@ Install `evalcache` in just one click.
 1. Clone this repository into `$ZSH_CUSTOM/plugins` (by default `~/.oh-my-zsh/custom/plugins`)
 
    ```sh
-   git clone https://github.com/mroth/evalcache ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/evalcache
+   git clone https://github.com/TimoBechtel/evalcache ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/evalcache
    ```
 
 2. Edit `~/.zshrc` to add _evalcache_ to your plugin list,
@@ -79,4 +84,4 @@ Install `evalcache` in just one click.
 
 ### [Zgen](https://github.com/tarjoilija/zgen)
 
-Add `zgen load mroth/evalcache` to your `.zshrc` file in the same function you're doing your other `zgen load` calls in. Zgen will handle automatically cloning the plugin for you the next time you do a `zgen save`.
+Add `zgen load TimoBechtel/evalcache` to your `.zshrc` file in the same function you're doing your other `zgen load` calls in. Zgen will handle automatically cloning the plugin for you the next time you do a `zgen save`.
