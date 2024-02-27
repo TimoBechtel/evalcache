@@ -6,6 +6,9 @@
 # default cache directory
 export ZSH_EVALCACHE_DIR=${ZSH_EVALCACHE_DIR:-"$HOME/.zsh-evalcache"}
 
+# cleanup after x seconds
+export ZSH_EVALCACHE_SECONDS=${ZSH_EVALCACHE_SECONDS:-"4320"} # every 3 days
+
 function _evalcache () {
   local cmdHash="nohash" data="$*" name
 
@@ -32,10 +35,20 @@ function _evalcache () {
   if [ "$ZSH_EVALCACHE_DISABLE" = "true" ]; then
     eval ${(q)@}
   elif [ -s "$cacheFile" ]; then
+
+    # rebuild cache if it's older than ZSH_EVALCACHE_SECONDS
+    local now=$(date +%s)
+    local file_modification=$(date -r "$cacheFile" +%s)
+    (( diff = (now - file_modification) / ZSH_EVALCACHE_SECONDS ))
+    if [ $diff -gt 1 ]; then
+      [ "$ZSH_EVALCACHE_SHOW_MESSAGES" = "true" ] && echo "evalcache: cache for $* expired, rebuilding it"
+      eval ${(q)@} > "$cacheFile"
+    fi
+
     source "$cacheFile"
   else
     if type "${name}" > /dev/null; then
-      echo "evalcache: ${name} initialization not cached, caching output of: $*" >&2
+      [ "$ZSH_EVALCACHE_SHOW_MESSAGES" = "true" ] && echo "evalcache: ${name} initialization not cached, caching output of: $*" >&2
       mkdir -p "$ZSH_EVALCACHE_DIR"
       eval ${(q)@} > "$cacheFile"
       source "$cacheFile"
